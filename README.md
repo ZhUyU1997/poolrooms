@@ -1,13 +1,21 @@
-# Poolrooms — 网页版池核第一人称探索
+<h1 align="center">Poolrooms</h1>
+
+<p align="center">
+  <em>网页版池核第一人称探索 · 无 UI、无任务，只有一片安静的瓷砖泳池空间</em>
+</p>
+
+<p align="center">
+  <a href="https://ZhUyU1997.github.io/poolrooms/"><strong>🚀 在线体验</strong></a>
+</p>
+
+<p align="center">
+  <sub>由 GitHub Actions 自动构建部署</sub>
+</p>
+
+---
 
 无 UI、无任务，只有一片安静的瓷砖泳池空间。纯静态站点，**完全离线运行**（three.js 已本地化，
 所有贴图与声音都是运行时程序化生成的，零外部请求）。
-
-## 🚀 在线体验
-
-### 👉 [**点击进入 Poolrooms**](https://ZhUyU1997.github.io/poolrooms/)
-
-> 由 GitHub Actions 自动构建部署。
 
 ## 声明
 
