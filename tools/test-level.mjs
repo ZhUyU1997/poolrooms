@@ -1,6 +1,6 @@
 // test-level.mjs —— 在 node 里直接跑 buildLevel 做几何探针 + 天空贴图方位校验
 // 这些都是纯数学，不需要 WebGL，所以能在 node 里断言，比看截图猜靠谱。
-import * as THREE from '../vendor/three/build/three.module.js';
+import * as THREE from 'three';
 import { buildLevel, WATER_Y } from '../src/level.js';
 import { createSkyEquirect, SUN_AZIMUTH_DEG, SUN_ELEVATION_DEG } from '../src/textures.js';
 

@@ -1,7 +1,7 @@
 // diag-passage.mjs —— 针对性诊断：把玩家放在指定位置往指定方向走，逐帧打印位置/碰撞/射线探针
 // 用法: node tools/diag-passage.mjs x y z targetX targetZ [seconds]
-import * as THREE from '../vendor/three/build/three.module.js';
-import { Octree } from '../vendor/three/addons/math/Octree.js';
+import * as THREE from 'three';
+import { Octree } from 'three/addons/math/Octree.js';
 
 globalThis.addEventListener = () => {};
 globalThis.document = { addEventListener: () => {} };

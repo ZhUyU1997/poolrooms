@@ -1,19 +1,9 @@
 // 把程序化纹理导出为 PNG 供人眼检查（node 内置 zlib 写最小 PNG 编码器，无依赖）。
 // 运行：node tools/dump-textures.mjs
-import { registerHooks } from 'node:module';
 import zlib from 'node:zlib';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-
-registerHooks({
-  resolve(specifier, context, nextResolve) {
-    if (specifier === 'three') {
-      return { url: new URL('../vendor/three/build/three.module.js', import.meta.url).href, shortCircuit: true };
-    }
-    return nextResolve(specifier, context);
-  },
-});
 
 const tex = await import('../src/textures.js');
 

@@ -1,0 +1,23 @@
+{
+  "name": "poolrooms",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Poolrooms — web first-person poolroom exploration (pnpm + Vite)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite --host 127.0.0.1 --port 8123",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8123",
+    "test": "node tools/test-level.mjs && node tools/test-textures.mjs && node tools/test-audio.mjs && node tools/test-walk.mjs"
+  },
+  "dependencies": {
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

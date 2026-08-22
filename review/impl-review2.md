@@ -1,7 +1,7 @@
 # impl-review2 — water.js / postfx.js 实现审查（three r185）
 
 范围：仅 `src/water.js`、`src/postfx.js`。只读审查，12 分钟时间盒（覆盖必查点 a–g，未逐条深挖 caustics 纹理生成）。
-核实基准：`vendor/three/build/three.module.js`、`vendor/three/addons/objects/Reflector.js`、`addons/postprocessing/{GTAOPass,SMAAPass,OutputPass}.js`。
+核实基准：pnpm 安装的 `three@0.185.1`（`node_modules/three`），addons 取 `three/addons/objects/Reflector.js`、`postprocessing/{GTAOPass,SMAAPass,OutputPass}.js`。
 
 结论：**需修订**（无崩溃级缺陷；有 3 条会造成可见画面错误 / 1 条一致性错误）。
 

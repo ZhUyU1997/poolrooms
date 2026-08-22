@@ -1,18 +1,6 @@
 // node 自测脚本：验证 textures.js 的接口契约与质量指标。
 // 运行：node tools/test-textures.mjs
-import { registerHooks } from 'node:module';
-
-// 把 textures.js 顶部的裸 `three` 说明符重定向到 vendor 文件，供 node 下 import。
-registerHooks({
-  resolve(specifier, context, nextResolve) {
-    if (specifier === 'three') {
-      return { url: new URL('../vendor/three/build/three.module.js', import.meta.url).href, shortCircuit: true };
-    }
-    return nextResolve(specifier, context);
-  },
-});
-
-const THREE = await import('../vendor/three/build/three.module.js');
+import * as THREE from 'three';
 const tex = await import('../src/textures.js');
 
 const isPow2 = (n) => n > 0 && (n & (n - 1)) === 0;

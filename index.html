@@ -37,31 +37,12 @@
     background: #04070a; white-space: pre-wrap;
   }
 </style>
-<script type="importmap">
-{
-  "imports": {
-    "three": "./vendor/three/build/three.module.js",
-    "three/addons/": "./vendor/three/addons/"
-  }
-}
-</script>
 </head>
 <body>
   <canvas id="view"></canvas>
   <div id="veil"></div>
   <div id="hint"><b>点击进入</b><i>WASD 移动 · SHIFT 快走 · SPACE 上浮 · CTRL 下潜 · ESC 释放鼠标</i></div>
   <div id="fatal"></div>
-  <script type="module">
-    // 顶层错误兜底：任何模块加载/运行期异常都落到 #fatal，绝不留白屏无提示
-    const fatal = document.getElementById('fatal');
-    function showFatal(msg) {
-      fatal.textContent = String(msg);
-      fatal.style.display = 'flex';
-      document.getElementById('hint').classList.add('hidden');
-    }
-    window.addEventListener('error', (e) => showFatal('运行出错：\n' + (e.error?.stack || e.message)));
-    window.addEventListener('unhandledrejection', (e) => showFatal('运行出错：\n' + (e.reason?.stack || e.reason)));
-    import('./src/main.js').catch((err) => showFatal('加载失败：\n' + (err?.stack || err)));
-  </script>
+  <script type="module" src="/src/boot.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // test-walk.mjs —— 在 node 里用真实碰撞跑完整闭环，验证"能走通、不卡死、不掉出世界"
 // 这是无头环境下唯一能验证关卡可玩性的手段（浏览器里没法自动按键）。
-import * as THREE from '../vendor/three/build/three.module.js';
-import { Octree } from '../vendor/three/addons/math/Octree.js';
+import * as THREE from 'three';
+import { Octree } from 'three/addons/math/Octree.js';
 
 // Player 会在构造时绑定 DOM 事件 → 先补最小桩
 globalThis.addEventListener = () => {};

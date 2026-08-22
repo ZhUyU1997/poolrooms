@@ -3,17 +3,21 @@
 无 UI、无任务，只有一片安静的瓷砖泳池空间。纯静态站点，**完全离线运行**（three.js 已本地化，
 所有贴图与声音都是运行时程序化生成的，零外部请求）。
 
-## 运行
+## 运行（pnpm + Vite）
 
-双击 `start-poolrooms.bat`（会起一个本机静态服务器并打开 Chrome）。
-手动方式：
+需要先安装 [pnpm](https://pnpm.io/)，然后在项目根目录：
 
+```bash
+pnpm install     # 安装 Vite / three 等依赖（锁文件 pnpm-lock.yaml 已提交）
+pnpm dev         # 开发服务器 → http://127.0.0.1:8123/
 ```
-node tools\serve.mjs 8123
-# 然后浏览器打开 http://127.0.0.1:8123/
-```
 
-停止：关掉那个最小化的 `poolrooms-server` 窗口即可（没有后台常驻服务）。
+生产构建与预览：
+
+```bash
+pnpm build       # 输出到 dist/
+pnpm preview     # 本地预览构建产物 → http://127.0.0.1:8123/
+```
 
 ## 操作
 
@@ -44,8 +48,8 @@ node tools\serve.mjs 8123
 ## 目录
 
 ```
-index.html              importmap + canvas（唯一的 DOM）
-start-poolrooms.bat     启动器（ASCII/CRLF）
+index.html              canvas + 唯一 DOM 入口
+src/boot.js             Vite 入口：全局错误兜底 → 加载 main.js
 src/main.js             引导、渲染编排、自适应画质、生命周期
 src/level.js            七区几何、开洞、水域表、灯光、光柱、GI 分区
 src/materials.js        材质库 + 世界空间 GI 场（onBeforeCompile 注入）
@@ -55,7 +59,7 @@ src/volumetrics.js      体积光柱 + 尘埃
 src/postfx.js           GTAO / Bloom / 调色 / SMAA / OutputPass
 src/player.js           胶囊碰撞、涉水、游泳、镜头呼吸与步伐
 src/audio.js            程序化音景（水声/滴水/脚步/混响，无素材）
-vendor/three/           three.js 0.185.1（build + addons 子集）
+package.json / vite.config.js   pnpm 脚本 + Vite 配置
 tools/                  测试与画面诊断工具（见 DESIGN.md §13.3）
 DESIGN.md               设计文档 + 修订记录
 ```
@@ -79,10 +83,11 @@ DESIGN.md               设计文档 + 修订记录
 ## 自测
 
 ```
-node tools\test-textures.mjs   # 贴图：平铺性/法线/动态范围/耗时
-node tools\test-audio.mjs      # 音频：幂等/节点不泄漏/IR 正确
-node tools\test-level.mjs      # 关卡：开口/门洞/地面/水域/天空方位/净高
-node tools\test-walk.mjs       # 真实物理走完七区闭环（26 航路点）
+pnpm test                    # 依次跑下面四组自测
+node tools\test-textures.mjs # 贴图：平铺性/法线/动态范围/耗时
+node tools\test-audio.mjs    # 音频：幂等/节点不泄漏/IR 正确
+node tools\test-level.mjs    # 关卡：开口/门洞/地面/水域/天空方位/净高
+node tools\test-walk.mjs     # 真实物理走完七区闭环（26 航路点）
 ```
 
 ## 性能

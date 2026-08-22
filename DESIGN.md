@@ -9,21 +9,21 @@
 
 **非目标**（明确不做）：任务/收集/恐怖 jumpscare、菜单/设置面板/HUD/准星、存档、多人、移动端触屏、关卡编辑器、外部美术资源下载。
 
-**交付形态**：纯静态站点（原生 ESM，无构建步骤），本地 HTTP 启动，**完全离线可跑**（three.js 已 vendor 到本地，纹理与音频全部运行时程序化生成，零外部请求）。
+**交付形态**：pnpm + Vite 工程化静态站点，构建后纯静态部署；本地 `pnpm dev` 开发、`pnpm build` 出 `dist/`。**完全离线可跑**（three.js 由 pnpm 依赖管理，纹理与音频全部运行时程序化生成，零外部请求）。
 
 ## 1. 技术选型与硬约束
 
 | 项 | 选择 | 理由 |
 |---|---|---|
-| 引擎 | three.js **0.185.1**，本地 `vendor/three/`（`build/three.module.js` + `three.core.js` + addons 子集） | 免 CDN、免代理（CVR 关着也能跑）；addons 里现成有 `Octree`/`Capsule`/后处理全套 |
+| 引擎 | three.js **0.185.1**，pnpm 依赖（`node_modules/three`） | 免 CDN、免代理（CVR 关着也能跑）；addons 里现成有 `Octree`/`Capsule`/后处理全套 |
 | 渲染器 | `WebGLRenderer`（WebGL2） | 稳定性优先；WebGPU 在 Chrome 上后处理链路仍有坑 |
-| 模块 | 原生 ESM + `<script type="importmap">` 映射 `three`、`three/addons/` | 零构建、可直接改文件刷新看效果 |
+| 模块 | 原生 ESM + Vite 解析 `three`、`three/addons/*` | 开发热更新、构建打包、无浏览器 importmap 依赖 |
 | 纹理 | **100% 运行时程序化生成**（canvas2D + 噪声 → albedo/normal/roughness） | 离线、体积零、参数可调（"贴近氛围"要反复调） |
 | 音频 | **100% WebAudio 程序化合成**（噪声整形 + 生成脉冲响应卷积混响） | 同上；水声/滴水/脚步/混响不依赖任何素材 |
-| 服务 | `tools/serve.mjs`（node 内置模块，零依赖静态服务器，默认端口 8123） | ESM 在 `file://` 下被 CORS 拦，必须走 HTTP |
+| 服务 | Vite dev / preview（默认端口 8123） | 开发用 `pnpm dev`，构建产物用 `pnpm preview` |
 | 目标机 | RTX 3060 Laptop + Chrome，1080p，目标 60fps | 自适应分辨率兜底（0.65~1.0） |
 
-**红线**：不改 DSH 官方文件；本项目自成目录 `D:\dsh-home\poolrooms\`，删目录即完全回滚；bat 全 ASCII。
+**红线**：不改 DSH 官方文件；本项目自成目录 `D:\dsh-home\poolrooms\`，删目录即完全回滚；所有命令统一走 pnpm。
 
 ## 2. "UE5 观感"的网页等效方案（原理 → 做法）
 
@@ -132,10 +132,11 @@ Lumen/Nanite 本身无法移植，抓的是**它们造成的观感特征**，逐
 
 ```
 D:\dsh-home\poolrooms\
-  index.html              # importmap + canvas + 进入提示（唯一 DOM）
-  start-poolrooms.bat     # ASCII：起服务 + 开 Chrome
-  tools\serve.mjs         # 零依赖静态服务器
+  index.html              # canvas + 进入提示（唯一 DOM）
+  package.json            # pnpm 脚本
+  vite.config.js          # Vite 配置
   DESIGN.md
+  src\boot.js             # Vite 入口：错误兜底 → 加载 main.js
   src\main.js             # 引导、主循环、三次渲染编排、自适应画质
   src\textures.js         # 程序化纹理工厂
   src\materials.js        # 材质集 + 明暗分区克隆
@@ -145,7 +146,6 @@ D:\dsh-home\poolrooms\
   src\postfx.js           # composer 链 + 调色/水下 shader
   src\player.js           # 控制器、碰撞、涉水/游泳、镜头动态
   src\audio.js            # 程序化音景
-  vendor\three\           # three 0.185.1（build + addons 子集）
 ```
 
 所有模块统一 `import * as THREE from 'three';`（走 importmap），不通过参数传 THREE。
@@ -199,7 +199,7 @@ export function buildLevel(THREE, ctx) -> {
 
 ## 11. 验收标准（尘逐项跑，AI 不自封完成）
 
-1. 双击 `start-poolrooms.bat` → 浏览器打开 → 3s 内出画面，控制台无红色报错。
+1. `pnpm dev` → 浏览器打开 `http://127.0.0.1:8123/` → 3s 内出画面，控制台无红色报错。
 2. 点击进入 → 鼠标视角流畅、无指针漂移；`Esc` 可退出。
 3. 站在中庭：能看见天窗光柱、水面反射柱子与天光、池底 caustics 游动、青绿深度渐变。
 4. 走进浅水：脚步变水声、有涟漪；进深水自动转游泳；潜入水下：画面蓝染扰动、声音变闷。
@@ -210,7 +210,7 @@ export function buildLevel(THREE, ctx) -> {
 
 ## 12. 回滚
 
-删除 `D:\dsh-home\poolrooms\` 即完全回滚（不动系统、不动 DSH、不写注册表、无后台常驻；服务器仅在 bat 运行期存在）。
+删除 `D:\dsh-home\poolrooms\` 即完全回滚（不动系统、不动 DSH、不写注册表、无后台常驻；Vite 进程仅在运行期间存在）。
 
 
 ---

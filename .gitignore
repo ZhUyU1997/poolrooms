@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.cache/
+.pnpm-store/
+*.local
+.DS_Store
