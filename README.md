@@ -3,6 +3,12 @@
 无 UI、无任务，只有一片安静的瓷砖泳池空间。纯静态站点，**完全离线运行**（three.js 已本地化，
 所有贴图与声音都是运行时程序化生成的，零外部请求）。
 
+## 声明
+
+本项目文件下载自原视频：
+
+- [原视频：https://www.bilibili.com/video/BV1i38P6jETE](https://www.bilibili.com/video/BV1i38P6jETE)
+
 ## 运行（pnpm + Vite）
 
 需要先安装 [pnpm](https://pnpm.io/)，然后在项目根目录：
